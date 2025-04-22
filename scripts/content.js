@@ -37,3 +37,8 @@ observer.observe(document.body, {
   childList: true,
   subtree: true
 });
+
+// Compatibilidad con Firefox
+if ((chrome || browser).runtime) {
+  console.log("Focus Guardian activo en este navegador.");
+}

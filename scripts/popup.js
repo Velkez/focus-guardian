@@ -24,7 +24,7 @@ const state = {
 const storage = {
   getSites: async () => {
     return new Promise(resolve => {
-      chrome.storage.local.get(['blockedSites', 'hiddenSites'], data => {
+      (chrome || browser).storage.local.get(['blockedSites', 'hiddenSites'], data => {
         resolve({
           blocked: data.blockedSites || [],
           hidden: data.hiddenSites || []
@@ -35,7 +35,7 @@ const storage = {
 
   saveSites: async (blocked, hidden = []) => {
     return new Promise(resolve => {
-      chrome.storage.local.set({ blockedSites: blocked, hiddenSites: hidden }, () => {
+      (chrome || browser).storage.local.set({ blockedSites: blocked, hiddenSites: hidden }, () => {
         resolve();
       });
     });
@@ -46,21 +46,25 @@ const storage = {
 // Blocking Rules
 // =====================
 const blocking = {
-  updateRules: (sites) => {
-    const rules = sites.map((site, i) => ({
-      id: i + 1000,
-      priority: 1,
-      action: { type: "block" },
-      condition: {
-        urlFilter: site,
-        resourceTypes: ["main_frame"]
-      }
-    }));
+  updateRules: async (sites) => {
+    if ((chrome || browser).declarativeNetRequest) {
+      const rules = sites.map((site, i) => ({
+        id: i + 1000,
+        priority: 1,
+        action: { type: "block" },
+        condition: {
+          urlFilter: site,
+          resourceTypes: ["main_frame"]
+        }
+      }));
 
-    chrome.declarativeNetRequest.updateDynamicRules({
-      removeRuleIds: sites.map((_, i) => i + 1000),
-      addRules: rules
-    });
+      (chrome || browser).declarativeNetRequest.updateDynamicRules({
+        removeRuleIds: sites.map((_, i) => i + 1000),
+        addRules: rules
+      });
+    } else {
+      console.warn("Dynamic rules are not supported in this browser.");
+    }
   }
 };
 
