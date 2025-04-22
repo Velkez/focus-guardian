@@ -101,39 +101,38 @@ const pomodoro = (() => {
     updateDisplay();
   };
 
+  // Sync with background script
+  const syncWithBackground = () => {
+    chrome.runtime.sendMessage({ action: "getTimerState" }, (response) => {
+      if (response) {
+        state.isRunning = response.isRunning;
+        state.isWorkTime = response.isWorkTime;
+        state.minutes = response.minutes;
+        state.seconds = response.seconds;
+        state.pomodoroCount = response.pomodoroCount;
+        updateDisplay();
+      }
+    });
+  };
+
   // Start the timer
   const startTimer = () => {
-    if (!state.interval) {
-      state.interval = setInterval(tick, 1000);
-      state.isRunning = true;
-      elements.startPauseBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
-    }
+    chrome.runtime.sendMessage({ action: "startTimer" });
   };
 
   // Pause the timer
   const pauseTimer = () => {
-    if (state.interval) {
-      clearInterval(state.interval);
-      state.interval = null;
-      state.isRunning = false;
-      elements.startPauseBtn.innerHTML = '<i class="fas fa-play"></i> Start';
-    }
+    chrome.runtime.sendMessage({ action: "pauseTimer" });
   };
 
   // Reset the timer
   const resetTimer = () => {
-    pauseTimer();
-    state.isWorkTime = true;
-    state.minutes = settings.workDuration;
-    state.seconds = 0;
-    state.pomodoroCount = 0;
-    updateDisplay();
-    elements.timerMode.textContent = 'Tiempo de Trabajo';
+    chrome.runtime.sendMessage({ action: "resetTimer" });
   };
 
   // Initialize event listeners
   const init = () => {
-    elements.startPauseBtn.addEventListener('click', () => {
+    elements.startPauseBtn.addEventListener("click", () => {
       if (state.isRunning) {
         pauseTimer();
       } else {
@@ -141,10 +140,15 @@ const pomodoro = (() => {
       }
     });
 
-    elements.resetBtn.addEventListener('click', resetTimer);
+    elements.resetBtn.addEventListener("click", resetTimer);
 
-    // Initialize display
-    updateDisplay();
+    chrome.storage.onChanged.addListener((changes) => {
+      if (changes.timerState) {
+        syncWithBackground();
+      }
+    });
+
+    syncWithBackground();
   };
 
   // Public API
@@ -154,4 +158,4 @@ const pomodoro = (() => {
 })();
 
 // Initialize the Pomodoro timer when the DOM is loaded
-document.addEventListener('DOMContentLoaded', pomodoro.init);
+document.addEventListener("DOMContentLoaded", pomodoro.init);
