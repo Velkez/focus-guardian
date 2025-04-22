@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Focus Guardian</title>
+  <link rel="stylesheet" href="./styles/style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="tab-container">
+    <button class="tab-button active" data-tab="blocker">Bloqueador</button>
+    <button class="tab-button" data-tab="pomodoro">Pomodoro</button>
+  </div>
+
+  <!-- Site Blocker Tab -->
+  <div id="blocker" class="tab-content active">
+    <h2>Focus Guardian</h2>
+    <input type="text" id="newSite" placeholder="Ingresa un dominio para desterrar...">
+    <div id="errorMessage" class="error-message"></div>
+    <button id="addSite">Mandar al exilio</button>
+    
+    <div id="mainContent">
+      <ul id="siteList"></ul>
+    </div>
+
+    <div class="toggle-view-btn">
+      <button id="toggleViewBtn" title="Alternar sitios ocultos">
+        <i class="fas fa-eye-slash"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Pomodoro Tab -->
+  <div id="pomodoro" class="tab-content">
+    <h2>Focus Guardian</h2>
+    <div class="pomodoro-container">
+      <div class="timer-display">
+        <div class="timer-circle">
+          <div class="timer-text" id="timer">25:00</div>
+        </div>
+        <div class="timer-mode" id="timerMode">Tiempo de Trabajo</div>
+        <div class="pomodoro-count">Pomodoros: <span id="pomodoroCount">0</span>/4</div>
+      </div>
+      <div class="timer-controls">
+        <button id="startPauseBtn" class="timer-btn">
+          <i class="fas fa-play"></i> Iniciar
+        </button>
+        <button id="resetBtn" class="timer-btn">
+          <i class="fas fa-redo"></i> Reiniciar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal (shared between both tabs) -->
+  <div id="confirmModal">
+    <div class="modal-content">
+      <p id="modalText">Este sitio será enviado al olvido...</p>
+      <div class="modal-buttons">
+        <button class="btn-cancel" id="cancelBtn">Retirarse</button>
+        <button class="btn-confirm" id="confirmBtn">¡Condenación Eterna!</button>
+      </div>
+    </div>
+  </div>
+
+  <audio id="alarmSound" src="alarm.mp3" preload="auto"></audio>
+
+  <script src="./scripts/popup.js"></script>
+  <script src="./scripts/pomodoro.js"></script>
+</body>
+</html>
