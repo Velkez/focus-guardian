@@ -1,0 +1,36 @@
+# Logs
+*.log
+
+# Node_modules
+node_modules/
+
+# Build output
+dist/
+build/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Extension builds
+*.xpi
+*.crx
+*.zip
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Environment
+.env
+.env.local
+
+# Temp
+*.pem
+*.key
+
+# Othes
+docs/
+openspec/

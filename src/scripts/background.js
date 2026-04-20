@@ -1,4 +1,4 @@
-let timerState = {
+const defaultTimerState = {
   isRunning: false,
   isWorkTime: true,
   minutes: 25,
@@ -6,11 +6,30 @@ let timerState = {
   pomodoroCount: 0
 };
 
+let timerState = { ...defaultTimerState };
+
 const settings = {
   workDuration: 25,
   shortBreak: 5,
   longBreak: 25,
   pomodorosBeforeLongBreak: 4
+};
+
+// Load state from storage on startup
+const loadState = () => {
+  chrome.storage.local.get('timerState', (data) => {
+    if (data.timerState) {
+      timerState = { ...defaultTimerState, ...data.timerState };
+      if (timerState.isRunning) {
+        chrome.alarms.create("pomodoroTimer", { periodInMinutes: 1 / 60 });
+      }
+    }
+  });
+};
+
+// Save state to storage
+const saveState = () => {
+  chrome.storage.local.set({ timerState, settings, lastSaved: Date.now() });
 };
 
 const updateTimer = () => {
@@ -25,7 +44,7 @@ const updateTimer = () => {
     timerState.seconds--;
   }
 
-  chrome.storage.local.set({ timerState });
+  saveState();
 };
 
 const switchPeriod = () => {
@@ -41,7 +60,7 @@ const switchPeriod = () => {
   timerState.isWorkTime = !timerState.isWorkTime;
   timerState.seconds = 0;
 
-  chrome.storage.local.set({ timerState });
+  saveState();
   chrome.notifications.create({
     type: "basic",
     iconUrl: "icon.png",
@@ -62,15 +81,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     timerState.isRunning = false;
     chrome.alarms.clear("pomodoroTimer");
   } else if (message.action === "resetTimer") {
-    timerState = {
-      isRunning: false,
-      isWorkTime: true,
-      minutes: settings.workDuration,
-      seconds: 0,
-      pomodoroCount: 0
-    };
+    timerState = { ...defaultTimerState, minutes: settings.workDuration };
     chrome.alarms.clear("pomodoroTimer");
-    chrome.storage.local.set({ timerState });
+    saveState();
   } else if (message.action === "getTimerState") {
     sendResponse(timerState);
   }
@@ -81,3 +94,6 @@ chrome.alarms.onAlarm.addListener((alarm) => {
     updateTimer();
   }
 });
+
+// Initialize on startup
+loadState();

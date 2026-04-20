@@ -1,0 +1,46 @@
+{
+  "version": "1.0",
+  "lastUpdated": "2026-04-20",
+  "selectors": {
+    "twitter": {
+      "primaryColumn": "[data-testid=\"primaryColumn\"]",
+      "feed": "[role=\"feed\"]"
+    },
+    "facebook": {
+      "feed": "[data-pagelet*=\"Feed\"]",
+      "stories": "[data-pagelet*=\"Stories\"]"
+    },
+    "instagram": {
+      "feed": ".xw7yly9"
+    },
+    "tiktok": {
+      "homepage": "#main-content-homepage_hot",
+      "videoFeed": ".video-feed"
+    },
+    "youtube": {
+      "shortsTab": "ytd-guide-entry-renderer:has(a[title=\"Shorts\"])",
+      "shortsMiniGuide": "ytd-mini-guide-entry-renderer:has(a[title=\"Shorts\"])",
+      "shortsSidebar": "ytd-guide-entry-renderer:has(a[title=\"Shorts\"]), ytd-mini-guide-entry-renderer:has(a[title=\"Shorts\"])",
+      "shortsLink": "[href^=\"/shorts/\"]",
+      "reelShelf": "ytd-reel-shelf-renderer",
+      "reelItem": "ytd-reel-item-renderer",
+      "richShelfShorts": "ytd-rich-shelf-renderer:has([href*=\"/shorts/\"])",
+      "richGridSlim": "ytd-rich-grid-slim-media",
+      "richGridGroup": "ytd-rich-grid-group:has([href^=\"/shorts/\"])",
+      "videoRendererShorts": "ytd-video-renderer:has([href^=\"/shorts/\"])",
+      "gridVideoRendererShorts": "ytd-grid-video-renderer:has([href^=\"/shorts/\"])",
+      "richGrid": "ytd-rich-grid-renderer",
+      "watchNext": "ytd-watch-next-secondary-results-renderer",
+      "comments": "ytd-comment-thread-renderer",
+      "spinner": "tp-yt-paper-spinner",
+      "endScreen": ".ytp-endscreen-content",
+      "ceElement": ".ytp-ce-element",
+      "autonavOverlay": ".ytp-autonav-endscreen-countdown-overlay",
+      "richSection": "ytd-rich-section-renderer",
+      "gridShelf": "grid-shelf-view-model",
+      "shortsLockup": "ytm-shorts-lockup-view-model-v2, ytm-shorts-lockup-view-model",
+      "shortsHeader": "yt-shelf-header-view-model",
+      "gridShelfRow": ".ytGridShelfViewModelGridShelfRow"
+    }
+  }
+}
